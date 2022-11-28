@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\Article;
-use jcobhams\NewsApi\NewsApi;
 
 class NewsReportController extends BaseController
 {

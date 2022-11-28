@@ -11,7 +11,6 @@ class NewsReportController extends BaseController
     {
         $keyword = $_GET['search'] ?? 'Formula 1';
 
-//        $newsApi = new NewsApi($_ENV['API_KEY']);
         $articlesApiResponse = $this->newsApi()->getEverything($keyword);
 
         $articles = [];
@@ -24,8 +23,7 @@ class NewsReportController extends BaseController
                 $article->urlToImage
             );
         }
-//        echo "<pre>";
-//        return $articles;
+
         return $this->render('index.html.twig', ['keyword' => $keyword, 'articles' => $articles]);
     }
 }

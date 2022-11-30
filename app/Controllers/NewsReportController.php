@@ -2,28 +2,23 @@
 
 namespace App\Controllers;
 
-use App\Models\Article;
+use App\Services\ArticleService;
+use App\Template;
 
-class NewsReportController extends BaseController
+class NewsReportController
 {
-    public function articles(): string
+    public function articles(): Template
     {
-        $keyword = $_GET['search'] ?? 'Formula 1';
+        $search = $_GET['search'] ?? 'Formula 1';
+        $category = $_GET['category'] ?? null;
 
-        $articlesApiResponse = $this->newsApi()->getEverything($keyword);
+        $articles = (new ArticleService())->execute($search, $category);
 
-        $articles = [];
-
-        foreach ($articlesApiResponse->articles as $article) {
-            $articles [] = new Article(
-                $article->title,
-                $article->url,
-                $article->description,
-                $article->urlToImage
-            );
-        }
-
-        return $this->render('index.html.twig', ['keyword' => $keyword, 'articles' => $articles]);
+        return new Template(
+            'articles/index.html.twig',
+            [
+                'articles' => $articles->get()
+            ]
+        );
     }
 }
-

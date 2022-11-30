@@ -37,8 +37,7 @@ class ArticleService
     {
         if (!$category) {
             return $this->api->getEverything($search);
-        } else {
-            return $this->api->getTopHeadLines($category);
         }
+        return $this->api->getTopHeadLines($category);   
     }
 }

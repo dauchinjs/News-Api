@@ -13,6 +13,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $rou
     $route->addRoute('GET', '/', ['App\Controllers\NewsReportController', 'articles']);
 });
 
+$loader = new \Twig\Loader\FilesystemLoader('views');
+$twig = new \Twig\Environment($loader);
+
 // Fetch method and URI from somewhere
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
@@ -38,7 +41,11 @@ switch ($routeInfo[0]) {
 
         [$controller, $method] = $handler;
 
-        $response = (new $controller)->{$method}();
-        echo $response;
+        $response = (new $controller)->{$method}($vars);
+
+        if ($response instanceof \App\Template) {
+            echo $twig->render($response->getPath(), $response->getParameters());
+        }
+
         break;
 }

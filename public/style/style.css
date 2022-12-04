@@ -1,0 +1,24 @@
+nav {
+    background-color: rgb(60, 60, 60);
+    color: white;
+    font-size: 22px;
+    text-align: center;
+}
+
+body {
+    background-color: rgb(120, 120, 120);
+    color: rgb(210, 210, 210);
+    font-size: 20px;
+    font-style: italic;
+    font-family: URW Gothic, monospace;
+}
+
+::placeholder {
+    font-style: italic;
+    color: maroon;
+}
+.user {
+    font-size: 17px;
+    text-align: end;
+    font-weight: bold;
+}

@@ -1,0 +1,55 @@
+{% include 'layout.twig' %}
+<section class="text-red-900 body-font">
+    <div class="container px-5 py-5 mx-auto">
+        <div class="flex flex-wrap -m-4">
+            {% for article in articles %}
+                <div class="p-4 md:w-1/3">
+                    <div class="h-full border-2 border-maroon-200  rounded-lg overflow-hidden">
+                        <div class="w-full">
+                            <div class="w-full flex p-2">
+                                <div class="p-2 ">
+                                </div>
+                                <div class="pl-2 pt-2 ">
+                                    <p class="font-bold">{{ article.getTitle }}</p>
+                                    <p style="color: whitesmoke"
+                                       class="text-xs">{{ article.getPublishedAt|date("d/m/Y h:i") }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if article.getPicture %}
+                            <img class="lg:h-48 md:h-36 w-full object-cover object-center"
+                                 src="{{ article.getPicture }}" alt="Placeholder"/>
+                        {% else %}
+                            <img class="lg:h-48 md:h-36 w-full object-cover object-center"
+                                 src="/pictures/imageNotFound.jpg" alt="Placeholder"/>
+                        {% endif %}
+                        <div class="p-4">
+                            {% if article.getAuthor %}
+                                <h2 class="tracking-widest text-xs title-font font-bold text-blue-900 mb-1 uppercase ">
+                                    Author: {{ article.getAuthor }}</h2>
+                            {% else %}
+                                <h2 class="tracking-widest text-xs title-font font-bold text-blue-900 mb-1 uppercase ">
+                                    Author: Unknown</h2>
+                            {% endif %}
+                            <h1 class="title-font text-lg font-medium text-gray-900 mb-3">{{ article.getDescription }}</h1>
+                            <div class="flex items-center flex-wrap text-blue-600 hover:text-white">
+                                <p class="inline-flex items-center">
+                                    <a href="{{ article.getUrl }}" target="_blank">Read News</a>
+                                    <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor"
+                                         stroke-width="2" fill="none" stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <path d="M5 12h14"></path>
+                                        <path d="M12 5l7 7-7 7"></path>
+                                    </svg>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -23,6 +23,7 @@
                                 border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
                                  focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                            placeholder="Email address">
+
                 </div>
                 <div>
                     <label for="password" class="sr-only">Password</label>
@@ -40,6 +41,12 @@
                                 border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
                                  focus:border-red-700 focus:outline-none focus:ring-red-700 sm:text-sm"
                            placeholder="Repeat Password">
+                    {% if error.password %}
+                    <div style="color: maroon;">{{ error.password }}</div>
+                    {% endif %}
+                    {% if error.email %}
+                        <div style="color: maroon;">{{ error.email }}</div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -57,11 +64,11 @@
                     clip-rule="evenodd"/>
             </svg>
           </span>
-                    Sign in
+                    Register
                 </button>
             </div>
         </form>
         {% if passwordsMatch is same as(false) %} Passwords don't match {% endif %}
-        {% if emailTaken is same as('email taken') %} E-mail taken {% endif %}
+        {% if emailTaken is same as(true) %} E-mail taken {% endif %}
     </div>
 </div>

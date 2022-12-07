@@ -5,8 +5,8 @@ require_once '../vendor/autoload.php';
 use App\Controllers\ArticlesController;
 use App\Controllers\LoginController;
 use App\Controllers\LogoutController;
+use App\Controllers\ProfileController;
 use App\Controllers\RegisterController;
-use App\Models\User;
 use Dotenv\Dotenv;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -18,15 +18,32 @@ session_start();
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route) {
     $route->addRoute('GET', '/', [ArticlesController::class, 'articles']);
+
     $route->addRoute('GET', '/register', [RegisterController::class, 'showForm']);
     $route->addRoute('POST', '/register', [RegisterController::class, 'store']);
+
     $route->addRoute('GET', '/login', [LoginController::class, 'showForm']);
     $route->addRoute('POST', '/login', [LoginController::class, 'execute']);
+
     $route->addRoute('GET', '/logout', [LogoutController::class, 'exit']);
+
+    $route->addRoute('GET', '/profile', [ProfileController::class, 'showForm']);
+    $route->addRoute('POST', '/profile', [ProfileController::class, 'updateProfile']);
 });
 
 $loader = new FilesystemLoader('../views');
 $twig = new Environment($loader);
+
+$authVariables = [
+    \App\ViewVariables\AuthViewVariables::class,
+    \App\ViewVariables\ErrorsViewVariable::class
+];
+
+foreach ($authVariables as $variable) {
+    /** @var \App\ViewVariables\ViewVariables $variable */
+    $variable = new $variable;
+    $twig->addGlobal($variable->getName(), $variable->getValue());
+}
 
 // Fetch method and URI from somewhere
 $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -55,17 +72,10 @@ switch ($routeInfo[0]) {
 
         $response = (new $controller)->{$method}($vars);
 
-        $userID = $_SESSION['users'];
-        $twig->addGlobal('userID', $userID);
-
-        if ($userID !== null) {
-            $user = new User($userID);
-
-            $twig->addGlobal('users', $user->getName());
-        }
-
         if ($response instanceof \App\Template) {
             echo $twig->render($response->getPath(), $response->getParameters());
+
+            unset($_SESSION['error']);
         }
 
         if ($response instanceof \App\Redirect) {

@@ -3,9 +3,11 @@
 namespace App\Controllers;
 
 use App\Redirect;
+use App\Services\Database;
 use App\Services\Register\RegisterService;
 use App\Services\Register\RegisterServiceRequest;
 use App\Template;
+use App\RegistrationValidation;
 
 class RegisterController
 {
@@ -14,20 +16,15 @@ class RegisterController
         return new Template('register.twig');
     }
 
-    public function store()
+    public function store(): Redirect
     {
+        (new RegistrationValidation())->validate($_POST);
+
+        if (!empty($_SESSION['error'])) {
+            return new Redirect('/register');
+        }
+
         $registerService = new RegisterService();
-
-        if ($_POST['password'] != $_POST['password_repeat']) {
-            return new Template('register.twig', ['passwordsMatch' => false]);
-        }
-
-        $emailCheck = $registerService->checkEmail($_POST['email']);
-
-        if ($emailCheck !== null) {
-            return new Template('register.twig', ['emailTaken' => $emailCheck]);
-        }
-
         $registerService->execute(
             new RegisterServiceRequest(
                 $_POST['name'],
@@ -36,6 +33,6 @@ class RegisterController
             )
         );
 
-        return new Redirect('/login');
+        return new Redirect('/register');
     }
 }
